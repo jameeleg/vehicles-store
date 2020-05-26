@@ -1,0 +1,14 @@
+<h1>Model-based Form Example:</h1>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <p>
+        <label>Email:</label>
+        <input type="email" formControlName="email">
+    </p>
+    <p>
+        <label>Password:</label>
+        <input type="password" formControlName="password">
+    </p>
+    <p>
+        <button type="submit" [disabled]="!form.valid">Submit</button>
+    </p>
+</form>

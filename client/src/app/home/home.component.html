@@ -1,0 +1,38 @@
+<h1>Select your vehicle</h1>
+
+<form [formGroup]="parentForm">
+	<app-search-input 
+		[placeHolderText]="'Manufacturer'"
+		(loading)="isLoading()"
+		[renderOptionInInput]="displayManufacturer"
+		[renderOptionInMenu]="displayManufacturer"
+		[parentForm]="parentForm"
+		[nameOfControl]="'autoMan'"
+		[dataSource]="getManufacturers"
+		(onSelectOption)="onSelectManufacturer($event)"
+	>
+	</app-search-input>
+
+	<app-search-input 
+		[placeHolderText]="'Make'"
+		[renderOptionInInput]="displayMake"
+		[renderOptionInMenu]="displayMake"
+		[parentForm]="parentForm"
+		[nameOfControl]="'autoMake'"
+		[dataSource]="getMakeForManufacturer"
+		(onSelectOption)="onSelectMake($event)"
+	>
+	</app-search-input>
+
+	<app-search-input 
+		[placeHolderText]="'Model'"
+		[renderOptionInInput]="displayModel"
+		[renderOptionInMenu]="displayModel"
+		[parentForm]="parentForm"
+		[nameOfControl]="'autoModel'"
+		[dataSource]="getModelsForMake"
+		(onSelectOption)="onSelectModel($event)"
+	>
+	</app-search-input> 
+	<button type="submit" [disabled]="!parentForm.valid">Submit</button>
+</form>
