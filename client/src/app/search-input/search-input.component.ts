@@ -78,9 +78,4 @@ export class SearchInputComponent implements OnInit {
 	renderOptionInMenuFn(option: any){
 		return this.renderOptionInMenu(option);
 	}
-
-	isLoading(){
-		return this.loading;
-	}
-
 }
