@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders  } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse  } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import { LoaderService } from './loader.service';
+
+import {
+	Response,
+	ManufacturerApiResult,
+	MakeApiResult,
+	ModelApiResult,
+} from './types';
 
 
 
@@ -59,59 +66,95 @@ export class AuthService {
 		);
 	}
 
-	getManufacturers(term: string): Observable<{}[]>{
+	placeOrder(
+		manId: string,
+		makeId: string,
+		modelId: string, 
+	): Observable<string> {
+		return this.http.post<Response<string>>(
+			'/api/placeorder', 
+			{manId, makeId, modelId},
+			this.getHeaders(),
+		)
+		.pipe(
+			map(result => {
+				return result.message;
+			})
+		);
+	}
+	getManufacturers(term: string, loader: string): Observable<Array<ManufacturerApiResult>>{
 	    if (!term.trim()) {
-	      // if not search term, return empty hero array.
 	      term = '';
 	    }
 
-	    this.loader.startLoading();
+	    // start loading
+	    this.loader.startLoading(loader);
 		
-		return this.http.get<{}[]>(
+		return this.http.get<Response<Array<ManufacturerApiResult>>>(
 			`/api/allmanufacturers?term=${term}`,
 			this.getHeaders(),
 		)
 		.pipe(
-			map((result: any) => result.items),
-			tap(result => {
-				this.loader.stopLoading()	
+			map(result => {
+				return result.items
 			}),
-			catchError(() => {console.log('search'); return of([]);})
+			tap(result => {
+				// stop loading
+				this.loader.stopLoading(loader);
+			}),
+			catchError((err: HttpErrorResponse) => of([]))
 		)
 
 	}
 
-	getMakeForManufacturer(manId: string, term: string): Observable<{}[]>{
-
-		return this.http.get<{}[]>(
+	getMakeForManufacturer(manId: string, term: string, loader: string): Observable<Array<MakeApiResult>>{
+	    
+	    // start loading
+	    this.loader.startLoading(loader);
+		
+		return this.http.get<Response<Array<MakeApiResult>>>(
 			`/api/makeformanufacturer/${manId}?term=${term}`,
 			this.getHeaders(),
 		)
 		.pipe(
-			map((result: any) => result.items),
+			map(result => result.items),
 			tap(result => {
+				// stop loading
+				this.loader.stopLoading(loader);
 			}),
-			catchError(() => {console.log('search'); return of([]);})
+			catchError((err: HttpErrorResponse) => {
+				// Notifications - error occurd
+				return of([]);
+			})
 		)
 
 	}
 
-	getModelsForMake(make: string, term: string): Observable<{}[]>{
-
-		return this.http.get<{}[]>(
+	getModelsForMake(make: string, term: string, loader): Observable<Array<ModelApiResult>>{
+	    // start loading
+	    this.loader.startLoading(loader);
+		
+		return this.http.get<Response<Array<ModelApiResult>>>(
 			`/api/getmodelsformake/${make}?term=${term}`,
 			this.getHeaders(),
 		)
 		.pipe(
-			map((result: any) => result.items),
+			map(result => result.items),
 			tap(result => {
+				// stop loading
+				this.loader.stopLoading(loader);
 			}),
 			catchError(() => {console.log('search error'); return of([]);})
 		)
 
 	}
 
-	signout() {
+	logout() {
+		// Make request to the server for logout
+		// TODO(Jameel) - Add http request to /api/logout
+
+
+		// then remove the token from localStorage
 		localStorage.removeItem('access_token');
 	}
 

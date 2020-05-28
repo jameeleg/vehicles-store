@@ -1,8 +1,17 @@
-<nav>
-  <a routerLink="/login">Login</a>
-  <a routerLink="/signup">signup</a>
-</nav>
 
+<mat-toolbar color="primary">
+	   <mat-toolbar-row>
+	      <div *ngIf="!loggedIn()">
+			  <a mat-button routerLink="/signup">Register</a>
+		      <a mat-button routerLink="/login">Login</a>
+		  </div>
+	      <div *ngIf="loggedIn()">
+	      	  <a mat-button routerLink="/home">Home</a>
+	      	  <span class="spacer"></span>
+			  <a mat-button routerLink="/logout" (click)="logout()">Logout</a>
+		  </div>
 
+	   </mat-toolbar-row>
+	
+</mat-toolbar>
 <router-outlet></router-outlet>
-

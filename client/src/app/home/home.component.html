@@ -1,38 +1,50 @@
-<h1>Select your vehicle</h1>
+<div class="home-app">
+      <mat-toolbar class="page-toolbar">
+       <div>Select your vehicle</div>
+    </mat-toolbar>
+  <mat-card class="login-container">
+     <mat-card-content>
+        <form [formGroup]="parentForm">
+           
+			<app-search-input 
+				[label]="'Manufacturer'"
+				[loading]="isLoading(MAN_LOADER)"
+				[renderOptionInInput]="displayManufacturer"
+				[renderOptionInMenu]="displayManufacturer"
+				[parentForm]="parentForm"
+				[nameOfControl]="'autoMan'"
+				[dataSource]="getManufacturers"
+				(onSelectOption)="onSelectManufacturer($event)"
+			>
+			</app-search-input>
+	  
+	   		<app-search-input 
+				[label]="'Make'"
+				[loading]="isLoading(MAKE_LOADER)"
+				[renderOptionInInput]="displayMake"
+				[renderOptionInMenu]="displayMake"
+				[parentForm]="parentForm"
+				[nameOfControl]="'autoMake'"
+				[dataSource]="getMakeForManufacturer"
+				(onSelectOption)="onSelectMake($event)"
+			>
+			</app-search-input>
 
-<form [formGroup]="parentForm">
-	<app-search-input 
-		[placeHolderText]="'Manufacturer'"
-		(loading)="isLoading()"
-		[renderOptionInInput]="displayManufacturer"
-		[renderOptionInMenu]="displayManufacturer"
-		[parentForm]="parentForm"
-		[nameOfControl]="'autoMan'"
-		[dataSource]="getManufacturers"
-		(onSelectOption)="onSelectManufacturer($event)"
-	>
-	</app-search-input>
-
-	<app-search-input 
-		[placeHolderText]="'Make'"
-		[renderOptionInInput]="displayMake"
-		[renderOptionInMenu]="displayMake"
-		[parentForm]="parentForm"
-		[nameOfControl]="'autoMake'"
-		[dataSource]="getMakeForManufacturer"
-		(onSelectOption)="onSelectMake($event)"
-	>
-	</app-search-input>
-
-	<app-search-input 
-		[placeHolderText]="'Model'"
-		[renderOptionInInput]="displayModel"
-		[renderOptionInMenu]="displayModel"
-		[parentForm]="parentForm"
-		[nameOfControl]="'autoModel'"
-		[dataSource]="getModelsForMake"
-		(onSelectOption)="onSelectModel($event)"
-	>
-	</app-search-input> 
-	<button type="submit" [disabled]="!parentForm.valid">Submit</button>
-</form>
+			<app-search-input 
+				[label]="'Model'"
+				[loading]="isLoading(MODEL_LOADER)"
+				[renderOptionInInput]="displayModel"
+				[renderOptionInMenu]="displayModel"
+				[parentForm]="parentForm"
+				[nameOfControl]="'autoModel'"
+				[dataSource]="getModelsForMake"
+				(onSelectOption)="onSelectModel($event)"
+			>
+			</app-search-input> 
+        </form>
+     </mat-card-content>
+     <mat-card-actions class="card-actions">
+        <button mat-raised-button [disabled]="isDisabled()" (click)="onSubmit()" color="primary">Submit</button>
+     </mat-card-actions>
+  </mat-card>
+</div>

@@ -2,10 +2,29 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+body{
+	/*background-color: rgb(45, 66, 32);*/
+}
 .success-snackbar {
 	background-color: #1DE9B6;	
 }
 
 .failed-snackbar {
 	background-color: #e34b4b;;
+}
+
+ 
+.full-width {
+  width: 100%;
+}
+
+.page-toolbar {
+    display: flex;
+    justify-content: space-around;
+}
+
+.invalid-feedback {
+	font-size: 10px;
+	color: orange;
 }

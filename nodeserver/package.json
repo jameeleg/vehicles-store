@@ -24,6 +24,7 @@
   "homepage": "https://github.com/jameeleg/vehicles-store#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "http-proxy-middleware": "^1.0.4",
     "simple-encryptor": "^3.0.0"
   },
   "devDependencies": {

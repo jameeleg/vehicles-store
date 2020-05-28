@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 
 import {
 	filter,
@@ -19,11 +19,11 @@ import {
 })
 export class SearchInputComponent implements OnInit {
 
-	// Define the placeholder text for the input
-	@Input() placeHolderText: string = 'type here';
+
 
  	@Input() parentForm: FormGroup;
  	@Input() nameOfControl: string;
+ 	@Input() label: string;
  	@Input() loading: boolean = false;
 
 	// renderer for option in the menu.
@@ -32,9 +32,8 @@ export class SearchInputComponent implements OnInit {
 	// rendere selected option in the input.
 	@Input() renderOptionInMenu: Function;
 
+	// dataSource for getting suggestions in autocomplete
 	@Input() dataSource: Function;
-
-	// @Output() dataSource: EventEmitter<string> = new EventEmitter<string>();
 	@Output() onSelectOption: EventEmitter<any> = new EventEmitter();
 
 
@@ -51,8 +50,7 @@ export class SearchInputComponent implements OnInit {
 		this.searchTerms$.next(term);
 	}
 
-	ngOnInit() {
-		console.log('===>', this.loading);
+	private initItems() {
     	this.items$ = this.searchTerms$.pipe(
 	      // wait 300ms after each keystroke before considering the term
 	      debounceTime(300),
@@ -64,9 +62,13 @@ export class SearchInputComponent implements OnInit {
 	      switchMap((term: string) => this.onDataSource(term)),	
 	    );
 	}
+	ngOnInit() {
+		this.initItems();
+	}
 
 	onSelect(e: any){
 		this.onSelectOption.emit(e);
+		// this.initItems();
 	}
 
 	onDataSource(term: string) {
@@ -77,7 +79,7 @@ export class SearchInputComponent implements OnInit {
 		return this.renderOptionInMenu(option);
 	}
 
-	public isLoading(){
+	isLoading(){
 		return this.loading;
 	}
 

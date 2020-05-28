@@ -1,14 +1,23 @@
-<h1>Model-based Form Example:</h1>
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <p>
-        <label>Email:</label>
-        <input type="email" formControlName="email">
-    </p>
-    <p>
-        <label>Password:</label>
-        <input type="password" formControlName="password">
-    </p>
-    <p>
-        <button type="submit" [disabled]="!form.valid">Submit</button>
-    </p>
-</form>
+<div class="login-app">
+    <mat-toolbar class="page-toolbar">
+       <div>Welcome to login page</div>
+    </mat-toolbar>
+  <mat-card class="login-container">
+     <mat-card-content>
+        <form [formGroup]="form">
+           <mat-form-field class="full-width">
+              <mat-label>Email</mat-label>
+              <input  matInput  placeholder="Email" formControlName="email">
+           </mat-form-field>
+           <mat-form-field class="full-width">
+              <mat-label>Password</mat-label>
+              <input  matInput  type="password" placeholder="Password" formControlName="password">
+           </mat-form-field>
+        </form>
+     </mat-card-content>
+     <mat-card-actions class="card-actions">
+        <button mat-raised-button (click)="onSubmit()"  [disabled]="!form.valid" color="primary">LOGIN</button>
+        <span>Don't have account? <a mat-button routerLink="/signup" color="accent">Register</a></span>
+     </mat-card-actions>
+  </mat-card>
+</div>

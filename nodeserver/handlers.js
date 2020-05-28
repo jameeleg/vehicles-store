@@ -31,10 +31,6 @@ const signupHandler = function(req, res) {
   res.send({token});
 }
 
-
-//
-//
-//
 const makeHttpGetRequest = function (url, parser, filterBy, hasMoreFn) {
   let data = '';
   return new Promise(resolve => {
@@ -61,7 +57,8 @@ const makeHttpGetRequest = function (url, parser, filterBy, hasMoreFn) {
         resolve({hasMore, items});
       });
     }).on("error", (err) => {
-      console.log("Error: " + err.message);
+      // console.log("Error: " + err.message);
+      // handle error
     });
   });
 }
@@ -115,35 +112,45 @@ const getAllManufacturersHandler = async function (req, res){
     else { // No more results? return the response
       hasMore = false;
     }
-  }
+  } 
   
   // let's assume the API will work and no failuers
-  res.status(200).json({"statusCode" : 200 ,"items" : result});
+  res.status(200).json({items : result, message: "Manufacturers fetched successfully"});
 }
 
 const getMakeForManufacturerHandler = async function (req, res){
   const {man_id} = req.params;
+  let {term} = req.query;
+  term = term.toLowerCase();
+
   let url = `https://vpic.nhtsa.dot.gov/api/vehicles/GetMakeForManufacturer/${man_id}?format=json`;
   const parser = (httpRes) => httpRes.Results;
   const filterBy = (res) => res.Make_Name && res.Make_Name.toLowerCase().includes(term);
 
-  const promiseResult = await makeHttpGetRequest(url, parser);
+  const promiseResult = await makeHttpGetRequest(url, parser, filterBy);
   
   // let's assume the API will work and no failuers
-  res.status(200).json({"statusCode" : 200 ,"items" : promiseResult.items});
+  res.status(200).json({"items" : promiseResult.items, message: "Make fetched successfully"});
 }
 
 const getModelsForMakeHandler = async function(req, res) {
-  console.log('=-=-=> models')
   const {make} = req.params;
+  let {term} = req.query;
+  term = term.toLowerCase();
+  
   let url = `https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${make}?format=json`;
   const parser = (httpRes) => httpRes.Results;
   const filterBy = (res) => res.Model_Name && res.Model_Name.toLowerCase().includes(term);
   
-  const promiseResult = await makeHttpGetRequest(url, parser);
+  const promiseResult = await makeHttpGetRequest(url, parser, filterBy);
   
   // let's assume the API will work and no failuers
-  res.status(200).json({"statusCode" : 200 ,"items" : promiseResult.items});  
+  res.status(200).json({items : promiseResult.items, message: "Models fetched successfully"});  
+}
+
+const placeorderHandler = function(req,res) {
+  const {manId, makeId, modelId} = req.body;
+  res.status(200).json({message : "Order was placed successfully"});  
 }
 
 module.exports = {
@@ -152,4 +159,5 @@ module.exports = {
 	getAllManufacturersHandler,
   getMakeForManufacturerHandler,
   getModelsForMakeHandler,
+  placeorderHandler,
 }

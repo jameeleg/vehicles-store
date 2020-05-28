@@ -1,13 +1,14 @@
 
-<label [formGroup]="parentForm"> Manu:
-	<input type="text" placeholder={{placeHolderText}} aria-label="Manufacturer" matInput [formControlName]="nameOfControl" [matAutocomplete]="automan" #searchBox (input)="onInputChange(searchBox.value)" (click)="onInputChange(searchBox.value)">
-</label>
-
-<mat-autocomplete #automan="matAutocomplete" (optionSelected)="onSelect($event)" [displayWith]="renderOptionInInput">
-  <mat-option *ngFor="let option of items$ | async" [value]="option">
-    {{renderOptionInMenuFn(option)}}
-  </mat-option>
-</mat-autocomplete>
-<div *ngIf="loading">
-	<mat-spinner diameter=25></mat-spinner>
-</div>
+<mat-form-field [formGroup]="parentForm" class="full-width">
+	<mat-label>{{label}}</mat-label>
+		<input type="text" aria-label="search-input" matInput [formControlName]="nameOfControl" [matAutocomplete]="automan" #searchBox (input)="onInputChange(searchBox.value)" (click)="!searchBox.value && onInputChange(searchBox.value)">
+	<mat-autocomplete #automan="matAutocomplete" (optionSelected)="onSelect($event)" [displayWith]="renderOptionInInput">
+	  <mat-option *ngFor="let option of items$ | async" [value]="option" 
+	  >
+	    {{renderOptionInMenuFn(option)}}
+	  </mat-option>
+	</mat-autocomplete>
+	<div *ngIf="loading">
+		<mat-spinner diameter=25></mat-spinner>
+	</div>
+</mat-form-field>

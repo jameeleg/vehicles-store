@@ -25,9 +25,6 @@ export class LoginComponent implements OnInit {
         private notifier: NotificationsService,
 	) {}
 
-    /*
-    * loging handler
-    */
 	public onSubmit() {
 	    this.auth.login(this.form.value.email, this.form.value.password)
 			.pipe(first())
@@ -38,6 +35,9 @@ export class LoginComponent implements OnInit {
 	}
 
     ngOnInit() {
+        if (this.auth.loggedIn){
+            this.router.navigate(['home']);
+        }
         this.form = this.formBuilder.group({
             "email": ["", [Validators.required, Validators.email]],
             "password":["", Validators.required],
