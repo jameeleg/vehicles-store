@@ -23,5 +23,6 @@ export interface ModelApiResult extends MakeApiResult{
 
 export interface Response<T>{
 	message?: string;
-	items: T; 
+	items: T;
+	error?: string;
 }

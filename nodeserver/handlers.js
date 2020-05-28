@@ -18,7 +18,7 @@ const signupHandler = function(req, res) {
 
   const user = database.getUser(email);
   if(user) {
-	return res.status(409).send('Email already exists');
+	  return res.status(409).send('Email already exists');
   }
   const userInfo = {
   	firstName,
@@ -33,7 +33,7 @@ const signupHandler = function(req, res) {
 
 const makeHttpGetRequest = function (url, parser, filterBy, hasMoreFn) {
   let data = '';
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     https.get(url, (resp) => {
 
       resp.on('data', (chunk) => {
@@ -43,6 +43,11 @@ const makeHttpGetRequest = function (url, parser, filterBy, hasMoreFn) {
       // The whole response has been received.
       resp.on('end', () => {
         const jsonResult = JSON.parse(data);
+        const {Message} = jsonResult;
+
+        if (Message != 'Response returned successfully'){
+          reject({general: Message, specific: jsonResult.Results});
+        }
         let items = []
         if(filterBy){
           // process the data we have recieved, and filter out results
@@ -57,8 +62,7 @@ const makeHttpGetRequest = function (url, parser, filterBy, hasMoreFn) {
         resolve({hasMore, items});
       });
     }).on("error", (err) => {
-      // console.log("Error: " + err.message);
-      // handle error
+        reject({general: 'general error', specific: 'specific error'});
     });
   });
 }
@@ -95,22 +99,28 @@ const getAllManufacturersHandler = async function (req, res){
   let hasMore = true;
   let result = [];
 
-
   // For simplicity, we don't need to go over ~200 pages,
   // and we don't need more than the first 10 results.
   while (hasMore && page <= 5 && result.length < 10){
     let url = `https://vpic.nhtsa.dot.gov/api/vehicles/getallmanufacturers?format=json&page=${page}`;
-    let promiseResult = await getPageOfManufacturers(url, term.toLowerCase());
+    
+    try {
+      let promiseResult = await getPageOfManufacturers(url, term.toLowerCase());
 
-    // update the result from the request number {page}
-    result = result.concat(promiseResult.items);
+      // update the result from the request number {page}
+      result = result.concat(promiseResult.items);
 
-    // has more results? increment the page
-    if(promiseResult.hasMore){
-      page++;
+      // has more results? increment the page
+      if(promiseResult.hasMore){
+        page++;
+      }
+      else { // No more results? return the response
+        hasMore = false;
+      }
     }
-    else { // No more results? return the response
-      hasMore = false;
+    catch(err) {
+      res.status(503).json({items : result, message: err.general, 'error': err.specific});
+      return;
     }
   } 
   

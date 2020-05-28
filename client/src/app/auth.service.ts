@@ -11,6 +11,7 @@ import {
 	ModelApiResult,
 } from './types';
 
+import { NotificationsService } from './notifications.service';
 
 
 @Injectable({
@@ -19,7 +20,8 @@ import {
 export class AuthService {
 	constructor(
 		private http: HttpClient,
-		private loader: LoaderService
+		private loader: LoaderService,
+		private notifier: NotificationsService,
 	) { }
 
 	private getHeaders(){
@@ -102,7 +104,7 @@ export class AuthService {
 				// stop loading
 				this.loader.stopLoading(loader);
 			}),
-			catchError((err: HttpErrorResponse) => of([]))
+			catchError((err: HttpErrorResponse) => this.handlerError(err, loader))
 		)
 
 	}
@@ -122,10 +124,7 @@ export class AuthService {
 				// stop loading
 				this.loader.stopLoading(loader);
 			}),
-			catchError((err: HttpErrorResponse) => {
-				// Notifications - error occurd
-				return of([]);
-			})
+			catchError((err: HttpErrorResponse) => this.handlerError(err, loader))
 		)
 
 	}
@@ -144,7 +143,7 @@ export class AuthService {
 				// stop loading
 				this.loader.stopLoading(loader);
 			}),
-			catchError(() => {console.log('search error'); return of([]);})
+			catchError((err: HttpErrorResponse) => this.handlerError(err, loader))
 		)
 
 	}
@@ -160,6 +159,13 @@ export class AuthService {
 
 	private getToken(): string {
 		return localStorage.getItem('access_token');
+	}
+
+	private handlerError(err: HttpErrorResponse, loader: string) {
+		this.loader.stopLoading(loader);
+		const errMsg = err.error.error[0].Message;
+		this.notifier.notify(errMsg, 'Dismiss', false)
+		return of([]);
 	}
 
 	public get loggedIn(): boolean {
