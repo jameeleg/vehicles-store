@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const getDatabase = function() {
-	const db = require('./credentials.json');
+	const db = require('./db.json');
 	return db;	
 }
 
@@ -14,7 +14,7 @@ const addUser = function(email, userInfo) {
 	const db = getDatabase();
 	db[email] = userInfo;
 
-	fs.writeFileSync('./credentials.json', JSON.stringify(db));
+	fs.writeFileSync('./db.json', JSON.stringify(db));
 }
 
 module.exports = {

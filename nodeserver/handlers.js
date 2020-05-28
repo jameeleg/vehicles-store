@@ -7,7 +7,10 @@ const loginHandler = function(req, res) {
   const {email, password} = req.body;
   const user = database.getUser(email);
 
-  if(!user || password != user.password) return res.status(401).send('Bad credentials');
+  // compare hashed password against the hashed password in the db
+  const hashedPassword = encryption.generateHashPassword(password);
+
+  if(!user || hashedPassword != user.password) return res.status(401).send('Bad credentials');
   const token = encryption.generateToken(email);
   res.send({token});
 }
@@ -23,7 +26,10 @@ const signupHandler = function(req, res) {
   const userInfo = {
   	firstName,
   	lastName,
-  	password,
+    // we save the hashed password. This adds a level of security
+    // even if the db.json was stolen, no one can login unless he have the 
+    // generateHashPassword function. This is safer.
+  	password: encryption.generateHashPassword(password),
   }
 
   database.addUser(email, userInfo)
