@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+
 import { Observable, Subject } from 'rxjs';
 
 import {
@@ -97,8 +99,8 @@ export class HomeComponent implements OnInit {
 		if(term != this.lastManTerm){
 			this.setInputStatuses(false,true,false,true);
 		}
-		this.selectedManfacturer = null;
 
+		this.selectedManfacturer = null;
 		this.lastManTerm = term;
 		return this.auth.getManufacturers(term, this.MAN_LOADER);
 	}
@@ -107,6 +109,7 @@ export class HomeComponent implements OnInit {
 		if(term != this.lastMakeTerm){
 			this.setInputStatuses(true,false,false,true);
 		}
+
 		this.selectedMake = null;
 		this.lastMakeTerm = term;
 		return this.auth.getMakeForManufacturer(this.selectedManfacturer.Mfr_ID.toString(), term, this.MAKE_LOADER);
@@ -122,20 +125,20 @@ export class HomeComponent implements OnInit {
 		);
 	}
 
-	onSelectManufacturer({option} : any) {
+	onSelectManufacturer({option} : MatAutocompleteSelectedEvent) {
 		this.selectedManfacturer = option.value;
 		this.lastManTerm = this.displayManufacturer(option.value);
 
 		this.setInputStatuses(true,true,false,true);
 	}
 	
-	onSelectMake({option} : any) {
+	onSelectMake({option} : MatAutocompleteSelectedEvent) {
 		this.selectedMake = option.value;
 		this.lastMakeTerm = this.displayMake(option.value);
 		this.setInputStatuses(true,false,true,false);
 	}
 
-	onSelectModel({option} : any) {
+	onSelectModel({option} : MatAutocompleteSelectedEvent) {
 		this.selectedModel = option.value;
 	}
 	
