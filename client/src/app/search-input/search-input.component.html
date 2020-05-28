@@ -1,5 +1,5 @@
 
-<mat-form-field [formGroup]="parentForm" class="full-width xyz">
+<mat-form-field [formGroup]="parentForm" class="full-width">
 	<mat-label>{{label}}</mat-label>
 		<input class="vs-input" type="text" aria-label="search-input" matInput [formControlName]="nameOfControl" [matAutocomplete]="automan" #searchBox (input)="onInputChange(searchBox.value)" (click)="!searchBox.value && onInputChange(searchBox.value)">
 	<mat-autocomplete #automan="matAutocomplete" (optionSelected)="onSelect($event)" [displayWith]="renderOptionInInput">

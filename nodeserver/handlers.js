@@ -31,6 +31,10 @@ const signupHandler = function(req, res) {
   res.send({token});
 }
 
+const SUCCESS_MESSAGES = [
+  'Results returned successfully',
+  'Response returned successfully',
+]
 const makeHttpGetRequest = function (url, parser, filterBy, hasMoreFn) {
   let data = '';
   return new Promise((resolve, reject) => {
@@ -45,7 +49,7 @@ const makeHttpGetRequest = function (url, parser, filterBy, hasMoreFn) {
         const jsonResult = JSON.parse(data);
         const {Message} = jsonResult;
 
-        if (Message != 'Response returned successfully'){
+        if (SUCCESS_MESSAGES.indexOf(Message) < 0){
           reject({general: Message, specific: jsonResult.Results});
         }
         let items = []
@@ -124,42 +128,53 @@ const getAllManufacturersHandler = async function (req, res){
     }
   } 
   
-  // let's assume the API will work and no failuers
   res.status(200).json({items : result, message: "Manufacturers fetched successfully"});
 }
 
 const getMakeForManufacturerHandler = async function (req, res){
-  const {man_id} = req.params;
-  let {term} = req.query;
+  let {term, man_id} = req.query;
   term = term.toLowerCase();
 
   let url = `https://vpic.nhtsa.dot.gov/api/vehicles/GetMakeForManufacturer/${man_id}?format=json`;
   const parser = (httpRes) => httpRes.Results;
   const filterBy = (res) => res.Make_Name && res.Make_Name.toLowerCase().includes(term);
-
-  const promiseResult = await makeHttpGetRequest(url, parser, filterBy);
-  
-  // let's assume the API will work and no failuers
-  res.status(200).json({"items" : promiseResult.items, message: "Make fetched successfully"});
+  try {
+    const promiseResult = await makeHttpGetRequest(url, parser, filterBy);
+    res.status(200).json({"items" : promiseResult.items, message: "Make fetched successfully"});
+    return;
+  }
+  catch(error) {
+    res.status(503).json({items : [], message: 'Something went wrong with the provider'});
+  }
 }
 
 const getModelsForMakeHandler = async function(req, res) {
-  const {make} = req.params;
-  let {term} = req.query;
+  const {make_name} = req.params;
+  let {makeid, term} = req.query;
   term = term.toLowerCase();
   
-  let url = `https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${make}?format=json`;
+  let url = `https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${make_name}?format=json`;
   const parser = (httpRes) => httpRes.Results;
-  const filterBy = (res) => res.Model_Name && res.Model_Name.toLowerCase().includes(term);
+  const filterBy = (res) => {
+    const matchMakeId = res.Make_ID == makeid;
+    const matchTerm = res.Model_Name && res.Model_Name.toLowerCase().includes(term)
+    return matchMakeId && matchTerm;
+  }
   
-  const promiseResult = await makeHttpGetRequest(url, parser, filterBy);
-  
-  // let's assume the API will work and no failuers
-  res.status(200).json({items : promiseResult.items, message: "Models fetched successfully"});  
+  try {
+    const promiseResult = await makeHttpGetRequest(url, parser, filterBy);
+    res.status(200).json({items : promiseResult.items, message: "Models fetched successfully"});
+    return;
+  }
+  catch(error) {
+    res.status(503).json({items : [], message: 'Something went wrong with the provider'});
+  }
 }
 
 const placeorderHandler = function(req,res) {
-  const {manId, makeId, modelId} = req.body;
+  const {manId, makeId, modelId} = req.query;
+
+  // TODO (Jameel) - Add this record to the current user in the data base
   res.status(200).json({message : "Order was placed successfully"});  
 }
 

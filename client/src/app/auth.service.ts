@@ -115,7 +115,7 @@ export class AuthService {
 	    this.loader.startLoading(loader);
 		
 		return this.http.get<Response<Array<MakeApiResult>>>(
-			`/api/makeformanufacturer/${manId}?term=${term}`,
+			`/api/makeformanufacturer?man_id=${manId}&term=${term}`,
 			this.getHeaders(),
 		)
 		.pipe(
@@ -129,12 +129,12 @@ export class AuthService {
 
 	}
 
-	getModelsForMake(make: string, term: string, loader): Observable<Array<ModelApiResult>>{
+	getModelsForMake(name: string, id:string, term: string, loader): Observable<Array<ModelApiResult>>{
 	    // start loading
 	    this.loader.startLoading(loader);
 		
 		return this.http.get<Response<Array<ModelApiResult>>>(
-			`/api/getmodelsformake/${make}?term=${term}`,
+			`/api/getmodelsformake/${name}?makeid=${id}&term=${term}`,
 			this.getHeaders(),
 		)
 		.pipe(

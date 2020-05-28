@@ -13,8 +13,8 @@ app.post('/api/auth', handlers.loginHandler);
 app.post('/api/signup', handlers.signupHandler);
 app.post('/api/placeorder', handlers.placeorderHandler);
 app.get('/api/allmanufacturers', handlers.getAllManufacturersHandler); 
-app.get('/api/makeformanufacturer/:man_id', handlers.getMakeForManufacturerHandler); 
-app.get('/api/getmodelsformake/:make', handlers.getModelsForMakeHandler); 
+app.get('/api/makeformanufacturer', handlers.getMakeForManufacturerHandler); 
+app.get('/api/getmodelsformake/:make_name', handlers.getModelsForMakeHandler); 
 
 
 

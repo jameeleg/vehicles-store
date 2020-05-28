@@ -114,7 +114,12 @@ export class HomeComponent implements OnInit {
 
 	getModelsForMake(term: string): Observable<ModelApiResult[]> {
 		this.selectedModel = null;
-		return this.auth.getModelsForMake(this.selectedMake.Make_Name.toString(), term, this.MODEL_LOADER);
+		return this.auth.getModelsForMake(
+			this.selectedMake.Make_Name.toString(),
+			this.selectedMake.Make_ID,
+			term,
+			this.MODEL_LOADER,
+		);
 	}
 
 	onSelectManufacturer({option} : any) {
