@@ -4,18 +4,19 @@
 `$ git clone git@github.com:jameeleg/vehicles-store.git`
 
 ## Development server node
+Run the following commands:
 
-You should navigate back to the root directory, then run the following commands:
 ```
-$ cd nodeserver
+$ cd vehicles-store/nodeserver
 $ npm install
 $ npm run dev
 ```
 
 ## Development server for client
-Run the following commands:
+Navigate back to the root directory, then run the following commands:
+
 ```
-$ cd client
+$ cd vehicles-store/client
 $ npm install
 $ ng serve
 ```
