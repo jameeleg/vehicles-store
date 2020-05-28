@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Observable, Subject, of } from 'rxjs';
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 
+import { Observable, Subject, of } from 'rxjs';
 import {
 	filter,
 	map,
@@ -17,9 +18,7 @@ import {
   templateUrl: './search-input.component.html',
   styleUrls: ['./search-input.component.scss']
 })
-export class SearchInputComponent implements OnInit {
-
-
+export class SearchInputComponent<T> implements OnInit {
 
  	@Input() parentForm: FormGroup;
  	@Input() nameOfControl: string;
@@ -33,11 +32,11 @@ export class SearchInputComponent implements OnInit {
 	@Input() renderOptionInMenu: Function;
 
 	// dataSource for getting suggestions in autocomplete
-	@Input() dataSource: Function;
-	@Output() onSelectOption: EventEmitter<any> = new EventEmitter();
+	@Input() dataSource: (term: string) => Observable<T>;
+	@Output() onSelectOption: EventEmitter<MatAutocompleteSelectedEvent> = new EventEmitter();
 
 
-	items$: Observable<{}>;
+	items$: Observable<T>;
 
 	private searchTerms$ = new Subject<string>();
 
@@ -66,16 +65,15 @@ export class SearchInputComponent implements OnInit {
 		this.initItems();
 	}
 
-	onSelect(e: any){
+	onSelect(e: MatAutocompleteSelectedEvent){
 		this.onSelectOption.emit(e);
-		// this.initItems();
 	}
 
 	onDataSource(term: string) {
 		 return this.dataSource(term);
 	}
 
-	renderOptionInMenuFn(option: any){
+	renderOptionInMenuFn(option: T){
 		return this.renderOptionInMenu(option);
 	}
 }
