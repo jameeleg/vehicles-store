@@ -27,5 +27,6 @@ After a short while you should see the following message:
 
 Navigate to `http://localhost:4200/`, register, select your vehicle and place your order.
 
-Happy "vehicling"
+
+Happy "vehicling" :)
 
