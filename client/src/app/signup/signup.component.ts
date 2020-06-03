@@ -11,7 +11,7 @@ import { first } from 'rxjs/operators';
 
 import { AuthService } from '../auth.service';
 import { NotificationsService } from '../notifications.service';
-import  {MustMatch} from '../Validators/must_match';
+import  {MustMatch} from '../validators/must_match';
 
 @Component({
   selector: 'app-signup',
