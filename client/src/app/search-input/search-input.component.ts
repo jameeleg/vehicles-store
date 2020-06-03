@@ -67,6 +67,7 @@ export class SearchInputComponent<T> implements OnInit {
 
 	onSelect(e: MatAutocompleteSelectedEvent){
 		this.onSelectOption.emit(e);
+		this.initItems();
 	}
 
 	onDataSource(term: string) {
