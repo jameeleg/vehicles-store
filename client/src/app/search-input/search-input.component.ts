@@ -47,7 +47,6 @@ export class SearchInputComponent<T> implements OnInit {
 	// Push a search term into the observable stream.
 	onInputChange(term: string): void {
 		this.searchTerms$.next(term);
-		this.initItems();
 	}
 
 	private initItems() {
