@@ -8,6 +8,10 @@ const authMiddleware = function() {
           next();
           return;
         }
+        if(!req.headers.authorization) {
+          res.redirect('/');
+          return;
+        }
 
         const token = req.headers.authorization.slice(7);
         const decryptedToken = encryption.getTokenParts(token);
