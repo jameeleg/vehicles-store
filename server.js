@@ -6,6 +6,7 @@ const handlers = require('./handlers');
 const middlewares = require('./middlewares');
 
 app.use(bodyParser.json());
+app.use(express.static(__dirname + '/dist/'));
 app.use(middlewares.authMiddleware);
 
 app.post('/api/auth', handlers.loginHandler);
