@@ -3,11 +3,27 @@
 ## Clone repo
 `$ git clone git@github.com:jameeleg/vehicles-store.git`
 
+
+## Production
+```
+cd vehicles-store
+npm install
+cd client
+npm install
+cd ..
+npm start
+```
+Then go to http://localhost:3080
+
+
+
+If you want a development environment, then you need to build the node server, and development server for angular.
+
 ## Development server node
 Run the following commands:
 
 ```
-$ cd vehicles-store/nodeserver
+$ cd vehicles-store
 $ npm install
 $ npm run dev
 ```
