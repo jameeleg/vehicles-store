@@ -1,3 +1,5 @@
+// server code
+
 const express = require('express');
 const app = express(),
       bodyParser = require("body-parser");
