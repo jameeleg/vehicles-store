@@ -3,9 +3,9 @@ const encryption = require('./encryption');
 const database = require('./db_api');
 const https = require('https');
 
-const loginHandler = function(req, res) {
+const loginHandler = async function(req, res) {
   const {email, password} = req.body;
-  const user = database.getUser(email);
+  const user = await database.getUser(email);
 
   // compare hashed password against the hashed password in the db
   const hashedPassword = encryption.generateHashPassword(password);
@@ -15,24 +15,25 @@ const loginHandler = function(req, res) {
   res.send({token});
 }
 
-const signupHandler = function(req, res) {
+const signupHandler = async function(req, res) {
   const body = req.body;
   const {firstName, lastName = '', email, password}  = req.body;
-
-  const user = database.getUser(email);
+  const user = await database.getUser(email);
   if(user) {
+    console.log('The user is: ', user)
 	  return res.status(409).send('Email already exists');
   }
   const userInfo = {
-  	firstName,
-  	lastName,
+    email,
+  	fname:  firstName,
+  	lname: lastName,
     // we save the hashed password. This adds a level of security
     // even if the db.json was stolen, no one can login unless he have the 
     // generateHashPassword function. This is safer.
   	password: encryption.generateHashPassword(password),
   }
 
-  database.addUser(email, userInfo)
+  database.addUser(userInfo)
   const token = encryption.generateToken(email);
   res.send({token});
 }
